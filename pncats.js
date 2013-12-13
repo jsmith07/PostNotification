@@ -22,11 +22,9 @@ function post_notification_cats_init(){
     for(i = 0; i < boxes.length; i++){
         if(boxes[i].id.substr(0, 4)== "cat."){
             if(tocheck != ""){
-                // hack by gwegner.de
                 if((boxes[i].id.substr(0, tocheck.length) == tocheck)
                   && (boxes[i].id.length > tocheck.length)
                   && (boxes[i].id.substr(tocheck.length, 1) == "."))
-                // end of hack 
                 {
                     post_notification_box[i]  = boxes[i].checked;
                     boxes[i].checked = true;

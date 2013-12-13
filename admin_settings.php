@@ -7,12 +7,23 @@
 # Wordpress. Please see the readme.txt for details.
 #------------------------------------------------------
 
-
-function post_notification_is_file($path, $file){
+/**
+ * Checks if required files for a template exist. Optional print parameter
+ * determines if error message should be displayed.
+ * 
+ * @param string $path
+ * @param string $file
+ * @param boolean $print
+ * 
+ * @return boolean
+ */
+function post_notification_is_file($path, $file, $print = true){
 	if(!is_file($path . '/' . $file)){
-		echo '<div class="error">'. __('File missing in profile folder.', 'post_notification') . '<br />';
-		echo __('Folder', 'post_notification') . ': <b>' . $path . '</b><br />';
-		echo __('File', 'post_notification') . ': <b>' . $file. '</b></div>';
+		if($print) {
+                    echo '<div class="error">'. __('File missing in profile folder.', 'post_notification') . '<br />';
+                    echo __('Folder', 'post_notification') . ': <b>' . $path . '</b><br />';
+                    echo __('File', 'post_notification') . ': <b>' . $file. '</b></div>';
+                }
 		return false;
 	}
 	return true;
@@ -30,29 +41,32 @@ function post_notification_check_string($path, $string){
 }
 
 function post_notification_is_profile($path){
-	if(!(
-		post_notification_is_file($path , 'confirm.tmpl') &&
-		post_notification_is_file($path , 'reg_success.tmpl') &&
-		post_notification_is_file($path , 'select.tmpl') &&
-		post_notification_is_file($path , 'subscribe.tmpl') &&
-		post_notification_is_file($path , 'unsubscribe.tmpl') &&
-		post_notification_is_file($path , 'strings.php'))) return false;
-	
-	if(!(
-		post_notification_check_string($path, 'error') &&
-		post_notification_check_string($path, 'already_subscribed') &&
-		post_notification_check_string($path, 'activation_faild') &&
-		post_notification_check_string($path, 'address_not_in_database') &&
-		post_notification_check_string($path, 'sign_up_again') &&
-		post_notification_check_string($path, 'deaktivated') &&
-		post_notification_check_string($path, 'no_longer_activated') &&
-		post_notification_check_string($path, 'check_email') &&
-		post_notification_check_string($path, 'wrong_captcha') &&
-		post_notification_check_string($path, 'all') &&
-		post_notification_check_string($path, 'saved')
-		)) return false;
-	
-	return true;
+    if( is_file($path . '/template')) {
+        if(!(		
+                post_notification_is_file($path , 'confirm.tmpl') &&
+                post_notification_is_file($path , 'reg_success.tmpl') &&
+                post_notification_is_file($path , 'select.tmpl') &&
+                post_notification_is_file($path , 'subscribe.tmpl') &&
+                post_notification_is_file($path , 'unsubscribe.tmpl') &&
+                post_notification_is_file($path , 'strings.php'))) return false;
+
+        if(!(
+                post_notification_check_string($path, 'error') &&
+                post_notification_check_string($path, 'already_subscribed') &&
+                post_notification_check_string($path, 'activation_faild') &&
+                post_notification_check_string($path, 'address_not_in_database') &&
+                post_notification_check_string($path, 'sign_up_again') &&
+                post_notification_check_string($path, 'deaktivated') &&
+                post_notification_check_string($path, 'no_longer_activated') &&
+                post_notification_check_string($path, 'check_email') &&
+                post_notification_check_string($path, 'wrong_captcha') &&
+                post_notification_check_string($path, 'all') &&
+                post_notification_check_string($path, 'saved')
+                )) return false;
+
+        return true;
+    }
+    return false;
 
 }
 
@@ -302,9 +316,8 @@ function post_notification_admin_sub(){
 		echo __('Otherwise they may be deleted using autoupdate. ', 'post_notification') . '</div>';
 		
 	}
-	
-		
-	$dir_handle=opendir(POST_NOTIFICATION_PATH);
+	        
+	/* $dir_handle=opendir(POST_NOTIFICATION_PATH);
 	while (false !== ($file = readdir ($dir_handle))) {
 		if(is_dir(POST_NOTIFICATION_PATH . $file) && $file[0] != '.' && $file[0] != '_') {
 			if(post_notification_is_profile(POST_NOTIFICATION_PATH . $file)){
@@ -312,7 +325,9 @@ function post_notification_admin_sub(){
 			}
 		}
 	}
-	closedir($dir_handle); 
+	closedir($dir_handle); */
+        $profile_list[] = 'LinkUp_en_US';
+        
 	foreach($profile_list as $profile_list_el){
 		$en_profiles .= "<option value=\"$profile_list_el\" ";
 		if($profile_list_el == $profile) $en_profiles .= ' selected="selected"';

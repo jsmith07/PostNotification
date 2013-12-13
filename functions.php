@@ -220,7 +220,7 @@ function post_notification_set_next_send(){
 
 /**
  * Create a link to the subscription page. 
- * @param addr The adress, which is to be used
+ * @param addr The address, which is to be used
  * @param code The Code, if available. If not it will be retrieved from the db.
  * @return the Adress.
  */

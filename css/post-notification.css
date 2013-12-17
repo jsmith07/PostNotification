@@ -2,3 +2,25 @@
  * CSS Styles for Post Notification Plugin
  */
 
+#post-notification input[type=email] {
+    padding: 4px 2px;
+    width: 132px;
+    border: 2px solid #acacac;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    background: #f4f4f4;
+    color: #555;
+}
+#post-notification input[type=email]:focus {
+    background: #fff;
+}
+#post-notification input[type=submit] {
+    padding: 4px 2px 3px 2px;    
+    margin: 0 0 0 3px;
+}
+.category-chooser ul.children {
+    margin-top: 0;
+}
+.category-chooser ul.children li {
+    margin-top: 5px;
+}

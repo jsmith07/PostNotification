@@ -348,8 +348,11 @@ function post_notification_widget( $args ) {
     echo $args['before_widget'];
     echo $args['before_title'] . $options['title'] . $args['after_title'];
     echo '<form id="newsletter" method="post" action="'.post_notification_get_link().'" >';
-    echo '<p>' . $options['subtext'] . '<br/> <input type="text" style="direction:ltr; text-align: left" name="addr" size="' . $options['size'] . '" maxlength="50" value="'.post_notification_get_addr().'"/> <br/>';
-    echo '<input type="submit" name="submit" value="' . $options['submit'] . '" /></p>';
+    echo '<div>';
+    echo '<label for="email">' . $options['subtext'] . '</label><br/>';
+    echo '<input type="email" name="addr" size="' . $options['size'] . '" maxlength="50" id="pnEmail" value="'.post_notification_get_addr().'" />';
+    echo '<input type="submit" name="submit" value="' . $options['submit'] . '" />';
+    echo '</div>';
     echo '</form>';
     echo $args['after_widget'];
 }
@@ -420,9 +423,9 @@ add_action( 'wp_enqueue_scripts', 'add_post_notification_stylesheet' );
 /**
  * Enqueue plugin stylesheet
  */
-function prefix_add_my_stylesheet() {
+function add_post_notification_stylesheet() {
     // Respects SSL, Style.css is relative to the current file
-    wp_register_style( 'post-notification-style', plugins_url('post-notification.css', __FILE__) );
+    wp_register_style( 'post-notification-style', plugins_url('css/post-notification.css', __FILE__ ) );
     wp_enqueue_style( 'post-notification-style' );
 }
 

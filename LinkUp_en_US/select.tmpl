@@ -1,18 +1,19 @@
-<form id="newsletter" method="post" action="@@action" style="text-align:left">
+<p>E-mail: @@addr</p>
 
-	<p>E-mail: @@addr</p>
-	
-        <p><b>Actions</b></p>
-        <div class="input radio">
-            <input type="radio" name="action" value="subscribe" checked="checked" id="category-select-action" /><label for="category-select-action">Select Categories</label>
-        </div>
-        <div class="category-chooser">
-            <p><b>Choose Categories</b></p>
-            @@cats
-        </div>
-        <div class="input radio">
-            <input type="radio" name="action" value="unsubscribe" id="unsubscribe-action" /><label for="unsubscribe-action">Unsubscribe</label>
-        </div>
-	<p><input type="submit" name="submit" value="Save" /></p>
-	@@vars
+<form id="newsletter" method="post" action="@@action" style="text-align:left">
+    <p>Select which article categories you would like to receive new post notifications for.</p>
+    <input type="hidden" name="action" value="subscribe" />        
+    <div class="category-chooser">
+        <p><b>Choose Categories</b></p>
+        @@cats
+    </div>
+    <p><input type="submit" name="submit" value="Update" /></p>
+    @@vars
+</form>
+<br />
+<form id="newsletter" method="post" action="@@action" style="text-align:left">
+    <p>If you no longer wish to receive our new post notification emails at @@addr click the Unsubscribe button below to be removed from the system.</p>
+    <input type="hidden" name="action" value="unsubscribe" />
+    <p><input type="submit" name="submit" value="Unsubscribe" /></p>
+    @@vars
 </form>

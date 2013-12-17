@@ -1,8 +1,18 @@
 <form id="newsletter" method="post" action="@@action" style="text-align:left">
 
 	<p>E-mail: @@addr</p>
-	<p><input type="radio" name="action" value="subscribe" checked="checked" />Select &nbsp; <input type="radio" name="action" value="unsubscribe" />Unsubscribe</p>
-	<p>@@cats</p>
+	
+        <p><b>Actions</b></p>
+        <div class="input radio">
+            <input type="radio" name="action" value="subscribe" checked="checked" id="category-select-action" /><label for="category-select-action">Select Categories</label>
+        </div>
+        <div class="category-chooser">
+            <p><b>Choose Categories</b></p>
+            @@cats
+        </div>
+        <div class="input radio">
+            <input type="radio" name="action" value="unsubscribe" id="unsubscribe-action" /><label for="unsubscribe-action">Unsubscribe</label>
+        </div>
 	<p><input type="submit" name="submit" value="Save" /></p>
 	@@vars
 </form>

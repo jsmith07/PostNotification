@@ -54,34 +54,18 @@ function post_notification_create_email($id, $template = ''){
         if(strlen($post->post_excerpt)){
             $post_content = stripslashes($post->post_excerpt);
         } else {
+            //strip shortcodes
+            $post->post_content = preg_replace("/\[([^\]].)*\]/","",$post->post_content);
             
-            $words = explode(' ', stripslashes($post->post_content));
+            $post_content = stripslashes($post->post_content);
             
-            $tag = false;
-            $wcount = 0;
-            foreach($words as $word){
-                    $stag = strrpos($word, '<');
-                    $etag = strrpos($word, '>');
-                    if(!is_bool($stag) || !is_bool($etag)){
-                        if(is_bool($stag)){
-                            $tag = false;
-                        } else if(is_bool($etag)){
-                            $tag = true;
-                        } else if($stag < $etag){
-                            $tag = false;
-                        } else {
-                            $tag = true;
-                        }
-                    }
-                    if(!$tag){
-                        $wcount++;
-                    }
-                    if($wcount > 55) break;
-                    $post_content .= $word. " ";  
-                
-            }
-            $post_content = balanceTags($post_content , true);
+            $post_content = explode("\r\n\r\n", $post_content);
+            
+            $post_content = array_slice($post_content, 0 , 3);
+            $post_content = implode("\r\n\r\n", $post_content);
+            
         }
+        $post_content = balanceTags($post_content , true);
         $post_content .= '<br /><a href="@@permalink" >'. get_option('post_notification_read_more') . '</a>' ;
     }
     

@@ -54,10 +54,15 @@ function post_notification_create_email($id, $template = ''){
         if(strlen($post->post_excerpt)){
             $post_content = stripslashes($post->post_excerpt);
         } else {
+            $first_img = post_notification_get_first_image($post->post_content);            
             //strip shortcodes
-            $post->post_content = preg_replace("/\[([^\]].)*\]/","",$post->post_content);
+            $post_content = preg_replace("/\[([^\]].)*\]/","",$post->post_content);           
             
-            $post_content = stripslashes($post->post_content);
+            $post_content = stripslashes($post_content);
+            
+            if($first_img) {
+                $post_content = '<img src="' . $first_img . '" style="float: left; margin: 0 10px 10px 0;" />' . $post_content;
+            }
             
             $post_content = explode("\r\n\r\n", $post_content);
             
@@ -71,28 +76,7 @@ function post_notification_create_email($id, $template = ''){
     
     // Run filters over the post
     if($post_content){
-        //backup
-        $filter_backup = $GLOBALS['wp_filter'];
-        //Remove unwanted Filters
-        $rem_filters = get_option('post_notification_the_content_exclude');
-        if(is_string($rem_filters) && strlen($rem_filters)){
-            $rem_filters = unserialize($rem_filters);
-        }
-        if(!is_array($rem_filters)){
-            $rem_filters = array();
-        }
-        
-        foreach($rem_filters as $rem_filter){
-            remove_filter('the_content', $rem_filter );
-        }
-        
-        if(!$html_email){
-            remove_filter('the_content', 'convert_smilies' ); //We defenetly don't want smilie - Imgs in Text-Mails.
-        }
-        $post_content = apply_filters('the_content', $post_content);
-        
-        //recover for other plugins
-        $GLOBALS['wp_filter'] = $filter_backup;
+        $post_content = post_notification_filter_post_content($post_content);
     }
     
     // Do some date stuff
@@ -184,6 +168,40 @@ function post_notification_create_email($id, $template = ''){
 
 }
 
+function post_notification_filter_post_content($post_content)
+{
+    //backup
+    $filter_backup = $GLOBALS['wp_filter'];
+    //Remove unwanted Filters
+    $rem_filters = get_option('post_notification_the_content_exclude');
+    if(is_string($rem_filters) && strlen($rem_filters)){
+        $rem_filters = unserialize($rem_filters);
+    }
+    if(!is_array($rem_filters)){
+        $rem_filters = array();
+    }
+
+    foreach($rem_filters as $rem_filter){
+        remove_filter('the_content', $rem_filter );
+    }
+
+    if(!$html_email){
+        remove_filter('the_content', 'convert_smilies' ); //We defenetly don't want smilie - Imgs in Text-Mails.
+    }
+    $post_content = apply_filters('the_content', $post_content);
+
+    //recover for other plugins
+    $GLOBALS['wp_filter'] = $filter_backup;
+
+    return $post_content;
+}
+
+function post_notification_get_first_image($post_content)
+{    
+    $output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', $post_content, $matches);    
+    $first_img = $matches[1][0];    
+    return $first_img;
+}
 
 function post_notification_sendmail($maildata, $addr, $code = '', $send = true){
         $maildata['body'] = str_replace('@@addr',$email->email_addr,$maildata['body']);
